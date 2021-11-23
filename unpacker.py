@@ -2,7 +2,6 @@ import gf
 import os
 from ctypes import cdll, c_char_p, create_string_buffer
 
-
 class OodleDecompressor:
     """
     Oodle decompression implementation.
@@ -155,7 +154,7 @@ def extract_module(module):
         continue
     data_offset = fb.seek(-1, 1)
 
-    decompressor = OodleDecompressor('I:/oo2core_8_win64.dll')
+    decompressor = OodleDecompressor('F:\downloads\HIMU-main\oo2core_8_win64.dll')
 
     for i, t1e in enumerate(files):
         # Cleaning string to be savable
@@ -175,7 +174,7 @@ def extract_module(module):
 
         in_file_offset = data_offset + t1e.local_data_offset
 
-        if in_file_offset >= file_size:
+        if in_file_offset >= file_size and fb_hd1 != b"":
             tmp = fb_hd1
             file_data_offset = in_file_offset - hd1_delta
         else:
@@ -219,15 +218,16 @@ def extract_all_modules():
     # Ignoring module hd files
     p = [os.path.join(dp, f)[len(deploy_path):].replace("\\", "/") for dp, dn, fn in os.walk(os.path.expanduser(deploy_path)) for f in fn if ".module" in f and ".module_" not in f]
     for file in p:
-        print(file)
-        extract_module(file.replace(".module", ""))
+            print(file)
+            extract_module(file.replace(".module", ""))
 
 
 if __name__ == "__main__":
-    unpack_path = "H:/HIU/"
-    deploy_path = "C:/Program Files (x86)/Steam/steamapps/common/MGS Test App 6/deploy/"
-    module_name = "pc/globals/forge/forge_objects-rtx-new"
-    # extract_module(module_name)
-    extract_all_modules()
+    unpack_path = "PUT FOLDER YOU WANT TO EXTRACT TO HERE!"
+    deploy_path = "YourGameDir/Halo Infinite/deploy"
+    module_name = "/pc/globals/common-rtx-new"
+
+    extract_module(module_name)
+    #extract_all_modules()
 
     ## pc/globals/forge/forge_objects-rtx-new.module is broken

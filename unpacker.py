@@ -164,54 +164,54 @@ def extract_module(module):
             t1e.string = t1e.string.replace(" ", "_")
             t1e.string = t1e.string.replace(":", "_")
 
-        t1e.save_path = f"{unpack_path}{t1e.string}"
-
         if "[5_bitmap_resource_handle.chunk5]" in t1e.string:
             continue
 
 
-        os.makedirs('/'.join(t1e.save_path.split('/')[:-1]), exist_ok=True)
+        #os.makedirs('/'.join(t1e.save_path.split('/')[:-1]), exist_ok=True)
 
-        in_file_offset = data_offset + t1e.local_data_offset
+        # in_file_offset = data_offset + t1e.local_data_offset
 
-        if in_file_offset >= file_size and fb_hd1 != b"":
-            tmp = fb_hd1
-            file_data_offset = in_file_offset - hd1_delta
-        else:
-            tmp = fb
-            file_data_offset = in_file_offset
-        decomp_save_data = b""
-        if t1e.decomp_size == 0:
-            with open(t1e.save_path, "wb"):
-                continue
-        if t1e.block_count:
-            for block in blocks[t1e.first_block_index:t1e.first_block_index+t1e.block_count]:
-                if block.b_compressed:
-                    tmp.seek(file_data_offset + block.comp_offset)
-                    data = tmp.read(block.comp_size)
-                    decomp = decompressor.decompress(data, block.decomp_size)
-                    if len(decomp_save_data) != block.decomp_offset:
-                        raise Exception("Skipped data fix")
-                    if decomp == False:
-                        decomp_save_data += b"\0" * block.decomp_size
-                        print("Warning: failed to decompress block in file: " + t1e.string)
-                    else:
-                        decomp_save_data += decomp
-                else:
-                    tmp.seek(file_data_offset + block.comp_offset)
-                    decomp = tmp.read(block.comp_size)
-                    if len(decomp_save_data) != block.decomp_offset:
-                        raise Exception("Skipped data fix")
-                    decomp_save_data += decomp
-        else:
-            if t1e.comp_size == t1e.decomp_size:
-                decomp_save_data = tmp.read(t1e.comp_size)
-            else:
-                tmp.seek(file_data_offset)
-                decomp_save_data = decompressor.decompress(tmp.read(t1e.comp_size), t1e.decomp_size)
+        # if in_file_offset >= file_size and fb_hd1 != b"":
+        #     tmp = fb_hd1
+        #     file_data_offset = in_file_offset - hd1_delta
+        # else:
+        #     tmp = fb
+        #     file_data_offset = in_file_offset
+        # decomp_save_data = b""
+        # if t1e.decomp_size == 0:
+        #     with open(t1e.save_path, "wb"):
+        #         continue
+        # if t1e.block_count:
+        #     for block in blocks[t1e.first_block_index:t1e.first_block_index+t1e.block_count]:
+        #         if block.b_compressed:
+        #             tmp.seek(file_data_offset + block.comp_offset)
+        #             data = tmp.read(block.comp_size)
+        #             decomp = decompressor.decompress(data, block.decomp_size)
+        #             if len(decomp_save_data) != block.decomp_offset:
+        #                 raise Exception("Skipped data fix")
+        #             if decomp == False:
+        #                 decomp_save_data += b"\0" * block.decomp_size
+        #                 print("Warning: failed to decompress block in file: " + t1e.string)
+        #             else:
+        #                 decomp_save_data += decomp
+        #         else:
+        #             tmp.seek(file_data_offset + block.comp_offset)
+        #             decomp = tmp.read(block.comp_size)
+        #             if len(decomp_save_data) != block.decomp_offset:
+        #                 raise Exception("Skipped data fix")
+        #             decomp_save_data += decomp
+        # else:
+        #     if t1e.comp_size == t1e.decomp_size:
+        #         decomp_save_data = tmp.read(t1e.comp_size)
+        #     else:
+        #         tmp.seek(file_data_offset)
+        #         decomp_save_data = decompressor.decompress(tmp.read(t1e.comp_size), t1e.decomp_size)
 
-        with open(t1e.save_path, "wb") as f:
-            f.write(decomp_save_data)
+        with open('1.2621.21.720.txt', 'a') as f:
+            #if t1e.string.endswith("]") == False:
+            f.write(module + ": " + t1e.string + "\n")
+
 
 
 def extract_all_modules():
@@ -223,11 +223,10 @@ def extract_all_modules():
 
 
 if __name__ == "__main__":
-    unpack_path = "PUT FOLDER YOU WANT TO EXTRACT TO HERE!"
-    deploy_path = "YourGameDir/Halo Infinite/deploy"
-    module_name = "/pc/globals/common-rtx-new"
+    deploy_path = "F:\Halo\MGS Test App 6\deploy"
+    module_name = "/any/levels/ui/mainmenu/mainmenu-rtx-new"
 
-    extract_module(module_name)
-    #extract_all_modules()
+    #extract_module(module_name)
+    extract_all_modules()
 
     ## pc/globals/forge/forge_objects-rtx-new.module is broken

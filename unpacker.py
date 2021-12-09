@@ -1,6 +1,9 @@
 import gf
 import os
 from ctypes import cdll, c_char_p, create_string_buffer
+from tkinter import filedialog
+import tkinter as tk
+import sys
 
 class OodleDecompressor:
     """
@@ -13,7 +16,10 @@ class OodleDecompressor:
         Initialize instance and try to load the library.
         """
         if not os.path.exists(library_path):
+            
             print(f'Looking in {library_path}')
+            library_path = filedialog.askopenfile(initialdir=deploy_path, title="Please locate Oodle dll (oo2core_8_win64.dll")
+
             raise Exception("Could not open Oodle DLL, make sure it is configured correctly.")
 
         try:
@@ -154,8 +160,8 @@ def extract_module(module):
         continue
     data_offset = fb.seek(-1, 1)
 
-    decompressor = OodleDecompressor('F:\downloads\HIMU-main\oo2core_8_win64.dll')
-
+    decompressor = OodleDecompressor('./oo2core_8_win64.dll')
+    print(f"File count: {len(files)}")
     for i, t1e in enumerate(files):
         # Cleaning string to be savable
 
@@ -164,7 +170,7 @@ def extract_module(module):
             t1e.string = t1e.string.replace(" ", "_")
             t1e.string = t1e.string.replace(":", "_")
 
-        t1e.save_path = f"{unpack_path}{t1e.string}"
+        t1e.save_path = f"{unpack_path}/{t1e.string}"
 
         if "[5_bitmap_resource_handle.chunk5]" in t1e.string:
             continue
@@ -221,13 +227,18 @@ def extract_all_modules():
             print(file)
             extract_module(file.replace(".module", ""))
 
-
 if __name__ == "__main__":
-    unpack_path = "PUT FOLDER YOU WANT TO EXTRACT TO HERE!"
-    deploy_path = "YourGameDir/Halo Infinite/deploy"
-    module_name = "/pc/globals/common-rtx-new"
-
-    extract_module(module_name)
-    #extract_all_modules()
+    # deploy_path = "G:/SteamLibrary/steamapps/common/Halo Infinite/deploy/"
+    # module_name = "pc/globals/common-rtx-new"
+    root = tk.Tk()
+    root.withdraw()
+    deploy_path = filedialog.askdirectory(initialdir='%%userprofile%%', title="Choose deploy folder inside Halo Folder")
+    if deploy_path is None:
+        sys.exit(0)
+    unpack_path = filedialog.askdirectory(initialdir=deploy_path, title="Choose destination folder")
+    if unpack_path is None:
+        sys.exit(0)
+    # extract_module(module_name)
+    extract_all_modules()
 
     ## pc/globals/forge/forge_objects-rtx-new.module is broken
